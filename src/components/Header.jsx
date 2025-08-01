@@ -1,15 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { EcommerceContext } from '../context/EcommerceContext';
 import { UserContext } from '../context/UserContext';
 import Search from './Search';
-import { FaShoppingCart, FaUserCircle, FaBox } from 'react-icons/fa'; // Import FaBox
+import { FaShoppingCart, FaUserCircle, FaBox } from 'react-icons/fa';
 
 function Header({ onSearch }) {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const { state, dispatch } = useContext(EcommerceContext);
   const { cart } = state;
-  const { user } = useContext(UserContext);
+  const { state: userState, dispatch: userDispatch } = useContext(UserContext);
+  const user = userState.user;
   const [showSearch, setShowSearch] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -17,15 +18,30 @@ function Header({ onSearch }) {
 
   const handleProfileClick = () => {
     setShowProfileMenu(false);
-    navigate(user ? '/profile' : '/login'); // Navigate to Profile or Login
+    navigate(user ? '/profile' : '/login');
   };
 
   const handleCartClick = () => {
-    navigate('/cart'); // Navigate to the Cart page
+    navigate('/cart');
   };
 
   const handleProductClick = () => {
-    navigate('/products'); // Navigate to the Product List page
+    navigate('/products');
+  };
+
+  const handleLogout = () => {
+    userDispatch({ type: 'LOGOUT' });
+    setShowProfileMenu(false);
+    navigate('/login');
+  };
+
+  const handleCheckoutClick = () => {
+    if (user) {
+      navigate('/checkout');
+    } else {
+      alert('Please log in to proceed to checkout.');
+      navigate('/login');
+    }
   };
 
   const toggleDarkMode = () => {
@@ -42,7 +58,7 @@ function Header({ onSearch }) {
         </button>
         <div className="relative ml-4">
           <button onClick={handleProductClick} className="flex items-center">
-            <FaBox className="mr-1" /> {/* Product icon */}
+            <FaBox className="mr-1" />
             Products
           </button>
         </div>
@@ -55,15 +71,6 @@ function Header({ onSearch }) {
               </span>
             )}
           </button>
-          {cart.length > 0 && (
-            <div className="absolute right-0 bg-white shadow-lg mt-2 w-48">
-              <ul>
-                {cart.map((item) => (
-                  <li key={item.id} className="p-2 border-b">{item.name}</li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
         <div className="relative ml-4">
           <button onClick={() => setShowProfileMenu(!showProfileMenu)}>
@@ -72,18 +79,27 @@ function Header({ onSearch }) {
           {showProfileMenu && (
             <div className="absolute right-0 bg-white shadow-lg mt-2 w-48 text-gray-800">
               <ul>
-                <li className="p-2 border-b" onClick={handleProfileClick}>
-                  {user ? 'Profile' : 'Login'}
-                </li>
-                {!user && (
-                  <li className="p-2 border-b text-gray-800" onClick={() => navigate('/register')}>
-                    Register
-                  </li>
-                )}
-                {user && (
-                  <li className="p-2 border-b text-gray-800" onClick={() => {/* Handle Logout */}}>
-                    Logout
-                  </li>
+                {user ? (
+                  <>
+                    <li className="p-2 border-b" onClick={handleProfileClick}>
+                      Profile
+                    </li>
+                    <li className="p-2 border-b" onClick={handleCheckoutClick}>
+                      Checkout
+                    </li>
+                    <li className="p-2 border-b text-gray-800" onClick={handleLogout}>
+                      Logout
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="p-2 border-b" onClick={handleProfileClick}>
+                      Login
+                    </li>
+                    <li className="p-2 border-b text-gray-800" onClick={() => navigate('/register')}>
+                      Register
+                    </li>
+                  </>
                 )}
               </ul>
             </div>

@@ -8,18 +8,17 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'REGISTER':
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload, orders: [] };
     case 'LOGIN':
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload, orders: action.payload.orders || [] };
     case 'LOGOUT':
-      return { ...state, user: null };
+      return { ...state, user: null, orders: [] };
     case 'ADD_ORDER':
-      return { ...state, orders: [...state.orders, action.payload] };
+      return { ...state, orders: [...state.orders, ...(Array.isArray(action.payload) ? action.payload : [action.payload])] };
     default:
       return state;
   }
 };
-
 // eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext();
 

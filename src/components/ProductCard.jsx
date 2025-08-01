@@ -9,12 +9,13 @@ function ProductCard({ product }) {
   };
 
   return (
-    <div className="border p-4 m-2">
-      <img src={product.image} alt={product.name} className="w-full h-auto object-cover mb-2" />
+    <div className=" p-4 m-2 rounded-lg shadow-lg bg-white">
+      
+      <img src={product.image} alt={product.name} className="w-full h-auto object-cover mb-2 rounded-lg" />
       <h2 className="text-lg">{product.name}</h2>
       <p>${product.price}</p>
       <button className="bg-blue-500 text-white p-2" onClick={addToCart}>
-        Add to Cart
+        Add to Cart 
       </button>
     </div>
   );

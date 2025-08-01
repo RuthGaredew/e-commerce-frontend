@@ -1,18 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const { dispatch } = useContext(UserContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleRegister = () => {
     const newUser = { username, password };
     dispatch({ type: 'REGISTER', payload: newUser });
     alert('Registration successful');
-    navigate('/products'); // Redirect to product list page
+    // Pass username and password to login page via navigation state
+    navigate('/login', { state: { username, password } });
   };
 
   return (
@@ -32,7 +33,7 @@ function Register() {
         onChange={(e) => setPassword(e.target.value)}
         className="border p-2 w-full mt-2"
       />
-      <button onClick={handleRegister} className="bg-blue-500 text-white p-2 mt-2">
+      <button type="submit" onClick={handleRegister} className="bg-blue-500 text-white p-2 mt-2">
         Register
       </button>
     </div>
