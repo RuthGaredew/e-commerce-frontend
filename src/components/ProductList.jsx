@@ -23,68 +23,67 @@ const ProductList = ({ searchTerm = "" }) => {
       name: "T-Shirt",
       category: "clothing",
       price: 29,
-      image: "../src/assets/T-Shirt.jpeg",
+      image: "./img/T-Shirt.jpeg",
     },
     {
       id: 3,
       name: "Laptop",
       category: "electronics",
       price: 999,
-      image: "../src/assets/Laptop.jpeg",
+      image: "./img/Laptop.jpeg",
     },
     {
       id: 4,
       name: "Sneakers",
       category: "footwear",
       price: 89,
-      image: "../src/assets/Sneakers.jpeg",
+      image: "./img/Sneakers.jpeg",
     },
     {
       id: 5,
       name: "Coffee Mug",
       category: "home",
       price: 15,
-      image: "../src/assets/CoffeeMug.jpeg",
+      image: "./img/CoffeeMug.jpeg",
     },
     {
       id: 6,
       name: "Headphones",
       category: "electronics",
       price: 199,
-      image: "../src/assets/Headphones.jpeg",
+      image: "./img/Headphones.jpeg",
     },
     {
       id: 7,
       name: "Backpack",
       category: "accessories",
       price: 45,
-      image: "../src/assets/Backpack.jpeg",
+      image: "./img/Backpack.jpeg",
     },
     {
       id: 8,
       name: "Digital Watch",
       category: "electronics",
       price: 250,
-      image: "../src/assets/DigitalWatch.jpeg",
+      image: "./img/DigitalWatch.jpeg",
     },
     {
       id: 9,
       name: "Jeans",
       category: "clothing",
       price: 49,
-      image: "../src/assets/Jeans.jpeg",
+      image: "./img/Jeans.jpeg",
     },
     {
       id: 10,
       name: "Bluetooth Speaker",
       category: "electronics",
       price: 129,
-      image: "../src/assets/BluetoothSpeaker.jpeg",
+      image: "./img/BluetoothSpeaker.jpeg",
     },
-    // Add more products as needed
+    
   ];
 
-  // Filter products based on the selected category and search term
   const filteredProducts = allProducts.filter(
     (product) =>
       (filters.category === "all" || product.category === filters.category) &&
