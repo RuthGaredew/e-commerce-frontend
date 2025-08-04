@@ -3,6 +3,7 @@ import { EcommerceContext } from "../context/EcommerceContext";
 import CategoryFilter from "./CategoryFilter";
 import ProductCard from "./ProductCard";
 
+
 const ProductList = ({ searchTerm = "" }) => {
   // Default value for searchTerm
   const { state } = useContext(EcommerceContext);
@@ -15,7 +16,7 @@ const ProductList = ({ searchTerm = "" }) => {
       name: "Smartphone",
       category: "electronics",
       price: 699,
-      image: "../src/assets/Smartphone.jpeg",
+      image: "public/img/Smartphone.jpeg",
     },
     {
       id: 2,

@@ -5,6 +5,7 @@ import { UserContext } from '../context/UserContext';
 import Search from './Search';
 import { FaShoppingCart, FaUserCircle, FaBox } from 'react-icons/fa';
 
+
 function Header({ onSearch }) {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(EcommerceContext);
