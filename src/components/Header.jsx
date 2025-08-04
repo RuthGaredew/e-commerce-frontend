@@ -16,11 +16,47 @@ function Header({ onSearch }) {
 
   const toggleSearch = () => setShowSearch(!showSearch);
   const toggleDarkMode = () => dispatch({ type: 'TOGGLE_DARK_MODE' });
+   const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <header className="bg-gray-800 text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10 shadow-lg">
       <h1 className="text-2xl">Mini E-Commerce</h1>
-      <div className="flex items-center">
+            <button
+            onClick={toggleMenu}
+            className="lg:hidden flex items-center justify-center p-2 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+          >
+            <span className="sr-only">Open menu</span>
+            <svg
+              className="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {isOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              )}
+            </svg>
+          </button>
+      <div className={`lg:flex lg:gap-x-12 ${isOpen ? 'block' : 'hidden'} lg:block`} id="mobile-menu">
         {showSearch && <Search onSearch={onSearch} />}
         <button onClick={toggleSearch} className="ml-4">🔍</button>
         <div className="relative ml-4">

@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 
 // Initial state for the context
 const initialState = {
@@ -54,6 +54,15 @@ export const EcommerceContext = createContext();
 
 export const EcommerceProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Apply dark mode to document
+  useEffect(() => {
+    if (state.darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [state.darkMode]);
 
   return (
     <EcommerceContext.Provider value={{ state, dispatch }}>
