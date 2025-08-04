@@ -14,7 +14,7 @@ function ProductCard({ product }) {
       <img src={product.image} alt={product.name} className="w-full h-auto object-cover mb-2 rounded-lg" />
       <h2 className="text-lg">{product.name}</h2>
       <p>${product.price}</p>
-      <button className="bg-blue-500 text-white p-2" onClick={addToCart}>
+      <button className="bg-blue-500 text-white p-2 bg-hover-blue-800" onClick={addToCart}>
         Add to Cart 
       </button>
     </div>

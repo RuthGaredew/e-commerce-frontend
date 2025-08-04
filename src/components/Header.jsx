@@ -49,7 +49,7 @@ function Header({ onSearch }) {
   };
 
   return (
-    <header className="bg-gray-800 text-white p-4 flex justify-between items-center absolute top-0 left-0 right-0 z-10">
+    <header className="bg-gray-800 text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10 shadow-lg">
       <h1 className="text-2xl">Mini E-Commerce</h1>
       <div className="flex items-center">
         {showSearch && <Search onSearch={onSearch} />}
