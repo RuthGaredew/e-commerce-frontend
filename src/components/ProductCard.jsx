@@ -9,7 +9,7 @@ function ProductCard({ product }) {
   };
 
   return (
-    <div className=" p-4 m-2 rounded-lg shadow-lg bg-white">
+    <div className="p-4 rounded-lg shadow-lg bg-white hover:shadow-2xl hover:scale-105 transform transition duration-300 cursor-pointer">
       
       <img src={product.image} alt={product.name} className="w-full h-auto object-cover mb-2 rounded-lg" />
       <h2 className="text-lg">{product.name}</h2>

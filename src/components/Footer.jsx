@@ -1,7 +1,11 @@
 import React from 'react';
 import { FaHeart, FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
 
 function Footer() {
+    const navigate = useNavigate();
+  
   return (
     <footer className="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -36,10 +40,10 @@ function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="/products" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Products</a></li>
-              <li><a href="/cart" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Cart</a></li>
-              <li><a href="/profile" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Profile</a></li>
-              <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Support</a></li>
+              <li><a onClick={() => navigate('/products')} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Products</a></li>
+              <li><a onClick={() => navigate('/cart')} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Cart</a></li>
+              <li><a onClick={() => navigate('/profile')} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Profile</a></li>
+              <li><a onClick={() => navigate('#')}href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Support</a></li>
             </ul>
           </div>
 
