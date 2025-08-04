@@ -16,7 +16,7 @@ const ProductList = ({ searchTerm = "" }) => {
       name: "Smartphone",
       category: "electronics",
       price: 699,
-      image: "public/img/Smartphone.jpeg",
+      image: "./img/Smartphone.jpeg",
     },
     {
       id: 2,
