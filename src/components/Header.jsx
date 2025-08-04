@@ -23,8 +23,15 @@ function Header({ onSearch }) {
   };
 
   return (
-    <header className="bg-gray-800 text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10 shadow-lg">
-      <h1 className="text-2xl">Mini E-Commerce</h1>
+    <header className="bg-blue-800 text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10 shadow-lg">
+       <div className="flex items-center mb-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-sm">ME</span>
+              </div>
+              <h3 className="text-xl font-bold  text-white bg-clip-text text-transparent">
+                Mini E-Commerce
+              </h3>
+            </div>
             <button
             onClick={toggleMenu}
             className="lg:hidden flex items-center justify-center p-2 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
