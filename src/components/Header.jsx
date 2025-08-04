@@ -15,55 +15,21 @@ function Header({ onSearch }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const toggleSearch = () => setShowSearch(!showSearch);
-
-  const handleProfileClick = () => {
-    setShowProfileMenu(false);
-    navigate(user ? '/profile' : '/login');
-  };
-
-  const handleCartClick = () => {
-    navigate('/cart');
-  };
-
-  const handleProductClick = () => {
-    navigate('/products');
-  };
-
-  const handleLogout = () => {
-    userDispatch({ type: 'LOGOUT' });
-    setShowProfileMenu(false);
-    navigate('/login');
-  };
-
-  const handleCheckoutClick = () => {
-    if (user) {
-      navigate('/checkout');
-    } else {
-      alert('Please log in to proceed to checkout.');
-      navigate('/login');
-    }
-  };
-
-  const toggleDarkMode = () => {
-    dispatch({ type: 'TOGGLE_DARK_MODE' });
-  };
+  const toggleDarkMode = () => dispatch({ type: 'TOGGLE_DARK_MODE' });
 
   return (
     <header className="bg-gray-800 text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10 shadow-lg">
       <h1 className="text-2xl">Mini E-Commerce</h1>
       <div className="flex items-center">
         {showSearch && <Search onSearch={onSearch} />}
-        <button onClick={toggleSearch} className="ml-4">
-          🔍
-        </button>
+        <button onClick={toggleSearch} className="ml-4">🔍</button>
         <div className="relative ml-4">
-          <button onClick={handleProductClick} className="flex items-center">
-            <FaBox className="mr-1" />
-            Products
+          <button onClick={() => navigate('/products')} className="flex items-center">
+            <FaBox className="mr-1" /> Products
           </button>
         </div>
         <div className="relative ml-4">
-          <button onClick={handleCartClick}>
+          <button onClick={() => navigate('/cart')}>
             <FaShoppingCart />
             {cart.length > 0 && (
               <span className="absolute text-xs bg-red-500 text-white rounded-full px-1">
@@ -81,24 +47,14 @@ function Header({ onSearch }) {
               <ul>
                 {user ? (
                   <>
-                    <li className="p-2 border-b" onClick={handleProfileClick}>
-                      Profile
-                    </li>
-                    <li className="p-2 border-b" onClick={handleCheckoutClick}>
-                      Checkout
-                    </li>
-                    <li className="p-2 border-b text-gray-800" onClick={handleLogout}>
-                      Logout
-                    </li>
+                    <li className="p-2 border-b" onClick={() => navigate('/profile')}>Profile</li>
+                    <li className="p-2 border-b" onClick={() => navigate('/checkout')}>Checkout</li>
+                    <li className="p-2 border-b text-gray-800" onClick={() => { userDispatch({ type: 'LOGOUT' }); navigate('/login'); }}>Logout</li>
                   </>
                 ) : (
                   <>
-                    <li className="p-2 border-b" onClick={handleProfileClick}>
-                      Login
-                    </li>
-                    <li className="p-2 border-b text-gray-800" onClick={() => navigate('/register')}>
-                      Register
-                    </li>
+                    <li className="p-2 border-b" onClick={() => navigate('/login')}>Login</li>
+                    <li className="p-2 border-b text-gray-800" onClick={() => navigate('/register')}>Register</li>
                   </>
                 )}
               </ul>

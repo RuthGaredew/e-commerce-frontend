@@ -1,6 +1,10 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* src/index.css */
+/* No additional custom styles needed for dark mode */
+
 body {
   background-color: #ffffff; /* Light mode background */
   color: #000000; /* Light mode text color */
