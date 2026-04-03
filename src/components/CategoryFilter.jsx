@@ -19,9 +19,7 @@ function CategoryFilter() {
 
   return (
     <div className="flex flex-wrap items-center gap-3 my-10">
-      <span className="text-sm font-bold text-gray-400 uppercase tracking-widest mr-2">
-        Filter:
-      </span>
+      
       {categoryNames.map((name) => {
         // Compare values safely for the "active" style
         const isActive =
