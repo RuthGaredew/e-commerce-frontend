@@ -1,105 +1,72 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { EcommerceContext } from "../context/EcommerceContext";
 import CategoryFilter from "./CategoryFilter";
 import ProductCard from "./ProductCard";
 
-
 const ProductList = ({ searchTerm = "" }) => {
-  // Default value for searchTerm
-  const { state } = useContext(EcommerceContext);
-  const { filters } = state;
+  const { state, fetchProducts } = useContext(EcommerceContext);
+  const { products, filters, loading } = state;
 
-  // Sample product data (this should ideally be fetched from an API)
-  const allProducts = [
-    {
-      id: 1,
-      name: "Smartphone",
-      category: "electronics",
-      price: 699,
-      image: "./img/Smartphone.jpeg",
-    },
-    {
-      id: 2,
-      name: "T-Shirt",
-      category: "clothing",
-      price: 29,
-      image: "./img/T-Shirt.jpeg",
-    },
-    {
-      id: 3,
-      name: "Laptop",
-      category: "electronics",
-      price: 999,
-      image: "./img/Laptop.jpeg",
-    },
-    {
-      id: 4,
-      name: "Sneakers",
-      category: "footwear",
-      price: 89,
-      image: "./img/Sneakers.jpeg",
-    },
-    {
-      id: 5,
-      name: "Coffee Mug",
-      category: "home",
-      price: 15,
-      image: "./img/CoffeeMug.jpeg",
-    },
-    {
-      id: 6,
-      name: "Headphones",
-      category: "electronics",
-      price: 199,
-      image: "./img/Headphones.jpeg",
-    },
-    {
-      id: 7,
-      name: "Backpack",
-      category: "accessories",
-      price: 45,
-      image: "./img/Backpack.jpeg",
-    },
-    {
-      id: 8,
-      name: "Digital Watch",
-      category: "electronics",
-      price: 250,
-      image: "./img/DigitalWatch.jpeg",
-    },
-    {
-      id: 9,
-      name: "Jeans",
-      category: "clothing",
-      price: 49,
-      image: "./img/Jeans.jpeg",
-    },
-    {
-      id: 10,
-      name: "Bluetooth Speaker",
-      category: "electronics",
-      price: 129,
-      image: "./img/BluetoothSpeaker.jpeg",
-    },
-    
-  ];
+  // Fetch products only once on mount
+  useEffect(() => {
+    if (products.length === 0) {
+      fetchProducts();
+    }
+  }, [fetchProducts, products.length]);
 
-  const filteredProducts = allProducts.filter(
-    (product) =>
-      (filters.category === "all" || product.category === filters.category) &&
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) // Safe to call toLowerCase()
-  );
+  // useMemo keeps the filtering performance high
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      // 1. Search Logic (API uses .title)
+      const matchesSearch = (product.title || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      // 2. Category Logic (Compare name string to filter string)
+      const currentFilter = (filters.category || "all").toLowerCase().trim();
+      const productCatName = (product.category?.name || "")
+        .toLowerCase()
+        .trim();
+
+      const matchesCategory =
+        currentFilter === "all" || productCatName === currentFilter;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, filters.category, searchTerm]);
+
+  if (loading && products.length === 0) {
+    return (
+      <div className="flex flex-col justify-center items-center py-40">
+        <div className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-blue-600"></div>
+        <p className="mt-4 text-gray-500 font-medium animate-pulse">
+          Loading Store...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="container mx-auto px-4 pb-20">
+      {/* Category Buttons Section */}
       <CategoryFilter />
-      <div className="grid grid-cols-3 gap-4 mt-4">
+
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-4">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product._id} product={product} />
           ))
         ) : (
-          <p>No products found.</p>
+          <div className="col-span-full flex flex-col items-center justify-center py-24 bg-gray-50 dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-700">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+              No results found
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400">
+              Try adjusting your filters or search terms.
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -1,17 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router } from "react-router-dom";
-import App from "./App";
-import { UserProvider } from "./context/UserContext";
-import { EcommerceProvider } from "./context/EcommerceContext";
-import "./styles/index.css"; // Ensure your styles are imported
 
+import { BrowserRouter } from "react-router-dom";
+import ReactDOM from "react-dom/client";
+import { EcommerceProvider } from "./context/EcommerceContext";
+import { UserProvider } from "./context/UserContext"; 
+import App from "./App";
+import "C:/Users/Kelela/Documents/GitHub/e-commerce-frontend/src/styles/index.css"; 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <Router>
-    <UserProvider>
-      <EcommerceProvider>
+  <UserProvider>
+    <EcommerceProvider>
+      <BrowserRouter>
         <App />
-      </EcommerceProvider>
-    </UserProvider>
-  </Router>
+      </BrowserRouter>
+    </EcommerceProvider>
+  </UserProvider>,
 );

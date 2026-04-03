@@ -6,7 +6,18 @@ const initialState = {
   filters: { category: 'all' },
   darkMode: false,
 };
-
+// Inside EcommerceProvider
+useEffect(() => {
+  // 1. Check the state
+  if (state.darkMode) {
+    document.documentElement.classList.add("dark");
+    // 2. Save it so it stays dark even if they refresh the page
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+  }
+}, [state.darkMode]);
 const reducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':

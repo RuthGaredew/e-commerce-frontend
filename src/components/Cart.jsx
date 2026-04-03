@@ -1,108 +1,171 @@
-import React, { useContext, useState } from 'react';
-import { EcommerceContext } from '../context/EcommerceContext';
-import { UserContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from "react";
+import { EcommerceContext } from "../context/EcommerceContext";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { state, dispatch } = useContext(EcommerceContext);
   const { cart } = state;
-  const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext); // Assuming user contains token and data
   const navigate = useNavigate();
 
-  // State for selected product
-  const [selectedProductId, setSelectedProductId] = useState(cart.length > 0 ? cart[0].id : null);
+  // Use _id for API compatibility, fallback to id for local
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
+  // Sync selected ID when cart loads
+  useEffect(() => {
+    if (cart.length > 0 && !selectedProductId) {
+      setSelectedProductId(cart[0]._id || cart[0].id);
+    }
+  }, [cart, selectedProductId]);
 
   const removeFromCart = (item) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: item });
-    // If removed item was selected, select another or null
-    if (selectedProductId === item.id) {
-      const remaining = cart.filter(i => i.id !== item.id);
-      setSelectedProductId(remaining.length > 0 ? remaining[0].id : null);
+    const itemId = item._id || item.id;
+    dispatch({ type: "REMOVE_FROM_CART", payload: { id: itemId } });
+
+    if (selectedProductId === itemId) {
+      const remaining = cart.filter((i) => (i._id || i.id) !== itemId);
+      setSelectedProductId(
+        remaining.length > 0 ? remaining[0]._id || remaining[0].id : null,
+      );
     }
   };
 
   const updateQuantity = (item, quantity) => {
     if (quantity < 1) return;
-    dispatch({ type: 'UPDATE_CART_QUANTITY', payload: { id: item.id, quantity } });
+    dispatch({
+      type: "UPDATE_CART_QUANTITY",
+      payload: { id: item._id || item.id, quantity },
+    });
   };
 
-  const handleCheckout = () => {
-    if (user) {
-      if (!selectedProductId) {
-        alert('Please select a product to checkout.');
-        return;
-      }
-      const selectedProduct = cart.find(item => item.id === selectedProductId);
-      navigate('/checkout', { state: { cart: [selectedProduct] } });
-    } else {
-      alert('Please log in to proceed to checkout.');
-      navigate('/login');
+  const handleCheckout = async () => {
+    if (!user) {
+      alert("Please log in to proceed to checkout.");
+      navigate("/login");
+      return;
     }
+
+    if (!selectedProductId) {
+      alert("Please select a product to checkout.");
+      return;
+    }
+
+    const selectedProduct = cart.find(
+      (item) => (item._id || item.id) === selectedProductId,
+    );
+
+    // API Integration: You mentioned POST /api/v1/orders/checkout-session/:cartId
+    // Usually, you'd send the cart data to your backend here to get a Stripe URL
+    navigate("/checkout", { state: { items: [selectedProduct] } });
   };
+
+  // Helper to find selected item for total calculation
+  const selectedItem = cart.find(
+    (item) => (item._id || item.id) === selectedProductId,
+  );
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-10 pb-10">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
-        <h2 className="text-2xl font-semibold mb-4">Shopping Cart</h2>
+    <div className="min-h-screen bg-gray-100 py-10 px-4 dark:bg-gray-900 transition-colors">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 w-full max-w-2xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 dark:text-white">Your Cart</h2>
+
         {cart.length === 0 ? (
-          <p className="text-center text-gray-500">Your cart is empty.</p>
+          <div className="text-center py-10">
+            <p className="text-gray-500 mb-4">Your cart is feeling lonely.</p>
+            <button
+              onClick={() => navigate("/")}
+              className="text-blue-500 hover:underline"
+            >
+              Go shopping →
+            </button>
+          </div>
         ) : (
           <>
-            <ul className="mb-4">
-              {cart.map((item) => (
-                <li key={item.id} className="flex flex-col md:flex-row justify-between items-center py-2 border-b">
-                  <div className="flex items-center gap-4">
-                    {/* Radio button for selection */}
-                    <input
-                      type="radio"
-                      name="selectedProduct"
-                      checked={selectedProductId === item.id}
-                      onChange={() => setSelectedProductId(item.id)}
-                      className="h-5 w-5"
-                    />
-                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
-                    <div>
-                      <span className="font-bold">{item.name}</span>
-                      <div className="text-gray-700">${item.price}</div>
+            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+              {cart.map((item) => {
+                const itemId = item._id || item.id;
+                const title = item.title || item.name;
+                return (
+                  <li
+                    key={itemId}
+                    className="flex flex-col md:flex-row justify-between items-center py-4 gap-4"
+                  >
+                    <div className="flex items-center gap-4 w-full">
+                      <input
+                        type="radio"
+                        name="selectedProduct"
+                        checked={selectedProductId === itemId}
+                        onChange={() => setSelectedProductId(itemId)}
+                        className="h-5 w-5 accent-blue-500"
+                      />
+                      <img
+                        src={item.image || item.imageCover}
+                        alt={title}
+                        className="w-20 h-20 object-contain rounded-lg bg-gray-50 p-1"
+                      />
+                      <div className="flex-1">
+                        <span className="font-bold block dark:text-white">
+                          {title}
+                        </span>
+                        <div className="text-blue-600 font-semibold">
+                          ${item.price}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-2 md:mt-0">
-                    <button
-                      className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-                      onClick={() => updateQuantity(item, item.quantity - 1)}
-                    >-</button>
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={e => updateQuantity(item, Number(e.target.value))}
-                      className="w-12 text-center border rounded"
-                    />
-                    <button
-                      className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-                      onClick={() => updateQuantity(item, item.quantity + 1)}
-                    >+</button>
-                    <button onClick={() => removeFromCart(item)} className="text-red-500 ml-2">Remove</button>
-                  </div>
-                  <div className="font-semibold mt-2 md:mt-0">
-                    Total: ${(item.price * item.quantity).toFixed(2)}
-                  </div>
-                </li>
-              ))}
+
+                    <div className="flex items-center justify-between w-full md:w-auto gap-6">
+                      <div className="flex items-center border rounded-lg dark:border-gray-600 overflow-hidden">
+                        <button
+                          className="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white hover:bg-gray-200 transition"
+                          onClick={() =>
+                            updateQuantity(item, item.quantity - 1)
+                          }
+                        >
+                          -
+                        </button>
+                        <span className="px-4 py-1 font-medium dark:text-white">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:text-white hover:bg-gray-200 transition"
+                          onClick={() =>
+                            updateQuantity(item, item.quantity + 1)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => removeFromCart(item)}
+                        className="text-red-500 hover:text-red-700 font-medium transition"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
-            <div className="flex justify-between font-semibold mb-4">
-              <strong>Total:</strong>
-              <strong>
-                {selectedProductId
-                  ? `$${(
-                      cart.find(item => item.id === selectedProductId)?.price *
-                      cart.find(item => item.id === selectedProductId)?.quantity
-                    ).toFixed(2)}`
-                  : "$0.00"}
-              </strong>
+
+            <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex justify-between items-center text-lg">
+                <span className="dark:text-gray-300">Selected Item Total:</span>
+                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  $
+                  {selectedItem
+                    ? (selectedItem.price * selectedItem.quantity).toFixed(2)
+                    : "0.00"}
+                </span>
+              </div>
             </div>
-            <button onClick={handleCheckout} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200 w-full">
-              Checkout
+
+            <button
+              onClick={handleCheckout}
+              className="mt-6 w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30 transition-all active:scale-[0.98]"
+            >
+              Proceed to Checkout
             </button>
           </>
         )}
