@@ -1,4 +1,3 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { BrowserRouter } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import { EcommerceProvider } from "./context/EcommerceContext";
